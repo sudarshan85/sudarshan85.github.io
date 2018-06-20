@@ -22,5 +22,15 @@
 The choice of the error function is dependent on the application. But regardless of what we choose, we have to implement it correctly so that the values returned by it actually guide us.</description>
     </item>
     
+    <item>
+      <title>About</title>
+      <link>https://sudarshan85.github.io/page/about/</link>
+      <pubDate>Tue, 19 Jun 2018 15:45:20 -0400</pubDate>
+      <author>sudarshan85@gmail.com (Sudarshan)</author>
+      <guid>https://sudarshan85.github.io/page/about/</guid>
+      <description>I am Sudarshan, PhD candidate at University of Tennessee (UTK) in the Electrical Engineering &amp;amp; Computer Science (EECS) department. My interests are in deep learning, natural language processing, and healthcare AI. I am part of Oak Ridge National Laboratory (ORNL) where I work on the Open Source Lab project.
+For my PhD work, I am focusing on efficiently mining electronic health records (EHR) for medical representation and utilizing them for building better downstream applications.</description>
+    </item>
+    
   </channel>
 </rss>

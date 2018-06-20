@@ -8,6 +8,11 @@
   </url>
   
   <url>
+    <loc>https://sudarshan85.github.io/page/about/</loc>
+    <lastmod>2018-06-19T15:45:20-04:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://sudarshan85.github.io/</loc>
     <lastmod>2018-06-20T14:28:42-04:00</lastmod>
   </url>
@@ -20,6 +25,12 @@
   <url>
     <loc>https://sudarshan85.github.io/tags/machine-learning/</loc>
     <lastmod>2018-06-20T14:28:42-04:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://sudarshan85.github.io/page/</loc>
+    <lastmod>2018-06-19T15:45:20-04:00</lastmod>
     <priority>0</priority>
   </url>
   
