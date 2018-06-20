@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Machine Learning on Learning Agent&#39;s Journal</title>
+    <link>https://sudarshan85.github.io/tags/machine-learning/</link>
+    <description>Recent content in Machine Learning on Learning Agent&#39;s Journal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <managingEditor>sudarshan85@gmail.com (Sudarshan)</managingEditor>
+    <webMaster>sudarshan85@gmail.com (Sudarshan)</webMaster>
+    <lastBuildDate>Wed, 20 Jun 2018 14:28:42 -0400</lastBuildDate>
+    
+	<atom:link href="https://sudarshan85.github.io/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Check Your Error Function</title>
+      <link>https://sudarshan85.github.io/post/error_function/</link>
+      <pubDate>Wed, 20 Jun 2018 14:28:42 -0400</pubDate>
+      <author>sudarshan85@gmail.com (Sudarshan)</author>
+      <guid>https://sudarshan85.github.io/post/error_function/</guid>
+      <description>The underlying primary objective of any machine learning algorithm is to reduce the value of the error function (sometimes known as a cost function). We determine how our algorithm is performing during development by applying it to a validation set and reporting the error. Consequently, we tune the parameters of our algorithm to reduce the validation error.
+The choice of the error function is dependent on the application. But regardless of what we choose, we have to implement it correctly so that the values returned by it actually guide us.</description>
+    </item>
+    
+  </channel>
+</rss>

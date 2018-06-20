@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Learning Agent&#39;s Journal</title>
+    <link>https://sudarshan85.github.io/tags/</link>
+    <description>Recent content in Tags on Learning Agent&#39;s Journal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <managingEditor>sudarshan85@gmail.com (Sudarshan)</managingEditor>
+    <webMaster>sudarshan85@gmail.com (Sudarshan)</webMaster>
+    <lastBuildDate>Wed, 20 Jun 2018 14:28:42 -0400</lastBuildDate>
+    
+	<atom:link href="https://sudarshan85.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Machine Learning</title>
+      <link>https://sudarshan85.github.io/tags/machine-learning/</link>
+      <pubDate>Wed, 20 Jun 2018 14:28:42 -0400</pubDate>
+      <author>sudarshan85@gmail.com (Sudarshan)</author>
+      <guid>https://sudarshan85.github.io/tags/machine-learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tip</title>
+      <link>https://sudarshan85.github.io/tags/tip/</link>
+      <pubDate>Wed, 20 Jun 2018 14:28:42 -0400</pubDate>
+      <author>sudarshan85@gmail.com (Sudarshan)</author>
+      <guid>https://sudarshan85.github.io/tags/tip/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

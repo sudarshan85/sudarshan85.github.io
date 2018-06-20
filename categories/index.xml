@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Learning Agent&#39;s Journal</title>
+    <link>https://sudarshan85.github.io/categories/</link>
+    <description>Recent content in Categories on Learning Agent&#39;s Journal</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <managingEditor>sudarshan85@gmail.com (Sudarshan)</managingEditor>
+    <webMaster>sudarshan85@gmail.com (Sudarshan)</webMaster>
+    
+	<atom:link href="https://sudarshan85.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+  </channel>
+</rss>
