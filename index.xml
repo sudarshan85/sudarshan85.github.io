@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>sudarshan85@gmail.com (Sudarshan)</managingEditor>
     <webMaster>sudarshan85@gmail.com (Sudarshan)</webMaster>
-    <lastBuildDate>Wed, 20 Jun 2018 14:28:42 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 18 Dec 2018 15:14:19 -0500</lastBuildDate>
     
 	<atom:link href="https://sudarshan85.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment and Data Preparation</title>
+      <link>https://sudarshan85.github.io/post/mercari_1/</link>
+      <pubDate>Tue, 18 Dec 2018 15:14:19 -0500</pubDate>
+      <author>sudarshan85@gmail.com (Sudarshan)</author>
+      <guid>https://sudarshan85.github.io/post/mercari_1/</guid>
+      <description>Introduction Data comes in various forms such as images, text, and tabular form. Deep learning can be applied to each of these areas and has excelled by giving state-of-art results. In this blog post series, I&amp;rsquo;m going to explore how to apply Deep Learning to a mixture of data components, specifically, text data and tabular data. This is part of a bigger research project that I&amp;rsquo;m working on, which uses medical data (excluding images) which often consists of different types of data.</description>
+    </item>
     
     <item>
       <title>Check Your Error Function</title>

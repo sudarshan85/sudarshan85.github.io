@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment and Data Preparation</title>
+  <meta property="og:title" content="Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment and Data Preparation" />
+  <meta name="twitter:title" content="Deep Learning with Structured and Unstructured Data with FastAI - Part …" />
+  <meta name="description" content="Introduction Data comes in various forms such as images, text, and tabular form. Deep learning can be applied to each of these areas and has excelled by giving state-of-art results. In this blog post series, I&rsquo;m going to explore how to apply Deep Learning to a mixture of data components, specifically, text data and tabular data. This is part of a bigger research project that I&rsquo;m working on, which uses medical data (excluding images) which often consists of different types of data.">
+  <meta property="og:description" content="Introduction Data comes in various forms such as images, text, and tabular form. Deep learning can be applied to each of these areas and has excelled by giving state-of-art results. In this blog post series, I&rsquo;m going to explore how to apply Deep Learning to a mixture of data components, specifically, text data and tabular data. This is part of a bigger research project that I&rsquo;m working on, which uses medical data (excluding images) which often consists of different types of data.">
+  <meta name="twitter:description" content="Introduction Data comes in various forms such as images, text, and tabular form. Deep learning can be applied to each of these areas and has excelled by giving state-of-art results. In this blog post …">
+  <meta name="author" content="Sudarshan"/>
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@sudarshan0522" />
+  <meta name="twitter:creator" content="@sudarshan0522" />
+  <meta property="og:url" content="https://sudarshan85.github.io/post/mercari_1/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="A Learning Agent&#39;s Journal" />
+
+  <meta name="generator" content="Hugo 0.40.1" />
+  <link rel="canonical" href="https://sudarshan85.github.io/post/mercari_1/" />
+  <link rel="alternate" href="https://sudarshan85.github.io/index.xml" type="application/rss+xml" title="A Learning Agent&#39;s Journal">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://sudarshan85.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://sudarshan85.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://sudarshan85.github.io/css/codeblock.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://sudarshan85.github.io">A Learning Agent&#39;s Journal</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment and Data Preparation</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on December 18, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 6 minutes (1166 words)
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Data comes in various forms such as images, text, and tabular form. Deep learning can be applied to each of these areas and has excelled by giving state-of-art results. In this blog post series, I&rsquo;m going to explore how to apply Deep Learning to a mixture of data components, specifically, text data and tabular data. This is part of a bigger research project that I&rsquo;m working on, which uses medical data (excluding images) which often consists of different types of data.</p>
+
+<p>I want to see how each data component contributes to the performance of the end model. To do this, I am going to build models that only utilize structured, unstructured, and a combination of the both the data and compare their performance.</p>
+
+<p>Structured data are presented in tabular form, examples of which include a product category or a diagnosis code for a suspected medical condition. Unstructured data include free-text such description of a product or a clinical note written by a doctor. Note that I&rsquo;m excluding images as part of this projects though they come under unstructured data.</p>
+
+<p>I&rsquo;m breaking up this series into 6 parts:</p>
+
+<ol>
+<li>Environment and Data Preparation (this post)</li>
+<li>Building Model with Structured Data</li>
+<li>Fine-Tuning Language Model with Unstrctured Data</li>
+<li>Building Model with Unstructured Data</li>
+<li>Building Model with Full Dataset</li>
+<li>Compare, Contrast, and Discuss Model Performance</li>
+</ol>
+
+<p>I will be using the <a href="https://docs.fast.ai/">FastAI</a> library for all my coding. The latest version of the library facilitates representing data easily and building state-of-art simple models quickly. You can participate in the FastAI <a href="http://forums.fast.ai">forums</a>, where people seek help and provide support.</p>
+
+<h2 id="dataset">Dataset</h2>
+
+<p>As I mentioned earlier, medical data often include structured and unstructured information together. Typically, when deep learing models have more data to work with, they provide better results. Unfortunately, medical data is very messy and there are privacy concerns in accessing them. So, when I started on this project, I wanted to build my architecture using a dataset that has been cleaned and ready to use. So I turned to <a href="www.kaggle.com">Kaggle</a>!</p>
+
+<p>Surprisingly, I couldn&rsquo;t find many datasets that actually included both structured and unstructured information together. There were plenty of image datasets, NLP datasets that contained only text, and tabular datasets. After a bit of searching, I found a dataset that fit my needs: <a href="https://www.kaggle.com/c/mercari-price-suggestion-challenge">Mercari Price Suggestion Challenge</a>. This competition concluded 10 months ago.</p>
+
+<p><a href="https://www.mercari.com/">Mercari</a> is Japan’s biggest community-powered shopping app. Sellers post items that they want to sell along with an asking price. Mercari offers pricing suggestions to them. The objective of this competition is to build an algorithm that automatically suggests the right product prices. The data provided including user-inputted text descriptions of their products (unstructured data component), including details like product category name, brand name, and item condition (structured data component). The data can be downloaded using the <a href="https://github.com/Kaggle/kaggle-api">Kaggle API</a> software using the command <code>kaggle competitions download -c mercari-price-suggestion-challenge</code>.</p>
+
+<p>This is a <em>Kernals only</em> competition, wherein you only provide a kernal (aka a script/code) which is then run on Kaggle servers to produce output and compare results. My objective for working with this dataset is not necessarily to get a good score. It&rsquo;s more so to learn how to build an end-to-end architecture with the FastAI library.</p>
+
+<h2 id="environment-setup">Environment Setup</h2>
+
+<p>I first created a new basic Anaconda environment using <code>conda env create -yn mer python=3.7</code>. The FastAI <a href="https://github.com/fastai/fastai/blob/master/README.md#installation">Github README</a> has information to do a basic install. But I have access to a machine that uses CUDA10. Furthermore, I always use the developer version, as the library is being actively developed with new features and bug fixes coming rapidly. Thus, having an updated developer version is helpful. I also use <a href="https://jupyterlab.readthedocs.io/en/stable/">JupyterLab</a> along with some helpful extensions. For the initial setup, I&rsquo;ve created a bash script that installs and sets everything up. The script can be found in <a href="https://gist.github.com/sudarshan85/74569c627be99ddfd48586b71e6a8b9b">this</a> gist.</p>
+
+<h2 id="data-preparation">Data Preparation</h2>
+
+<p>My data preparation notebook can be found <a href="http://nbviewer.jupyter.org/github/sudarshan85/kaggle-mercari/blob/master/Data-Prep.ipynb">here</a>.</p>
+
+<h3 id="details">Details</h3>
+
+<p>The data consists of 3 tab seperated files:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Filename</th>
+<th align="center">Size (MB)</th>
+<th align="center">No of Records</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><code>train.tsv</code></td>
+<td align="center">323</td>
+<td align="center">1482535</td>
+</tr>
+
+<tr>
+<td align="center"><code>test.tsv</code></td>
+<td align="center">148</td>
+<td align="center">693359</td>
+</tr>
+
+<tr>
+<td align="center"><code>test_stg2.tsv</code></td>
+<td align="center">737</td>
+<td align="center">3460725</td>
+</tr>
+</tbody>
+</table>
+
+<p>Note that since, I&rsquo;m not really competing in the competition, I don&rsquo;t the data in the test sets except for their <code>item_descrption</code> for building the language model.</p>
+
+<p>There are 8 columns in the <code>train.tsv</code>:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Name</th>
+<th align="center">Type</th>
+<th align="center">Cardinality</th>
+<th align="center">Missing</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><code>train_id</code></td>
+<td align="center">Continuous</td>
+<td align="center">N/A</td>
+<td align="center">0</td>
+</tr>
+
+<tr>
+<td align="center"><code>name</code></td>
+<td align="center">Text</td>
+<td align="center">N/A</td>
+<td align="center">0</td>
+</tr>
+
+<tr>
+<td align="center"><code>item_condition_id</code></td>
+<td align="center">Categorical</td>
+<td align="center">5</td>
+<td align="center">0</td>
+</tr>
+
+<tr>
+<td align="center"><code>category_name</code></td>
+<td align="center">Categorical</td>
+<td align="center">1287</td>
+<td align="center">6327</td>
+</tr>
+
+<tr>
+<td align="center"><code>brand_name</code></td>
+<td align="center">Categorical</td>
+<td align="center">4809</td>
+<td align="center">632682</td>
+</tr>
+
+<tr>
+<td align="center"><code>price</code></td>
+<td align="center">Continuous</td>
+<td align="center">N/A</td>
+<td align="center">0</td>
+</tr>
+
+<tr>
+<td align="center"><code>shipping</code></td>
+<td align="center">Binary</td>
+<td align="center">2</td>
+<td align="center">0</td>
+</tr>
+
+<tr>
+<td align="center"><code>item_description</code></td>
+<td align="center">Text</td>
+<td align="center">N/A</td>
+<td align="center">4</td>
+</tr>
+</tbody>
+</table>
+
+<p>The test data has the same columns except the <code>price</code> column which is the dependent variable, i.e., the target to be predicted. The FastAI library by default adds 1 to the cardinality to compensate for missing values (even if there aren&rsquo;t any).</p>
+
+<h3 id="preprocessing">Preprocessing</h3>
+
+<p>I do a couple of preprocessing steps to the entire dataset. These steps are available in the nobebook. Basically, I do the following:</p>
+
+<ul>
+<li>Remove records with prices <code>&lt; $3</code> as Mercari does not allow postings in that price range.</li>
+<li>Extract 3 sub categories from <code>category_name</code>. For example, a category name &ldquo;Men/Tops/T-shirts&rdquo; is actually made up of a &ldquo;main&rdquo; (<code>main_cat</code>) category &ldquo;Men&rdquo; and two sub categories (<code>sub_cat1</code> and <code>sub_cat2</code>) &ldquo;Tops&rdquo; and &ldquo;T-shirts&rdquo;. I extract them and add them as new columns to the dataset. These will also be categorical variables.</li>
+<li>Replace <code>na</code>&rsquo;s in the <code>item_description</code> with the word &ldquo;missing&rdquo;, as FastAI library doesn&rsquo;t like <code>nan</code>&rsquo;s for text during langauge modelling.</li>
+</ul>
+
+<h3 id="dataset-creation">Dataset Creation</h3>
+
+<p>I created 4 datasets from my data for each of the various types of modeling.</p>
+
+<ol>
+<li>Language Modelling: Texts can be made up of different fields such as &ldquo;Title&rdquo;, &ldquo;Abstract&rdquo; etc. Knowing that a piece of text belongs to a fields can be useful information. In this dataset, I thought that knowing what name a seller gives to a product and their item description are useful to know. So, I created a dataset that consists of two columns <code>name</code> and <code>item_description</code> which contained the corresponding information from <strong>ALL</strong> three datasets.</li>
+<li>To be able to compare the performances of different models, I need to have the same training/testing data for all of them. I create a custom training and testing set with a <sup>90</sup>&frasl;<sub>10</sub> split. This is the data set that contains all the data which I will be using for building the final model architecture that consumes both the dataset.</li>
+<li>Structured Data: I include <code>['train_id', 'item_condition_id', 'category_name', 'brand_name', 'price', 'shipping', 'main_cat', 'sub_cat1', 'sub_cat2']</code> as part of my structured variables and create a structured training and testing dataset from the custom sets created earlier.</li>
+<li>Unstructured Data: I include <code>['train_id', 'name', 'price', 'item_description']</code> as part of my unstructured variables and create a structured training and testing dataset from the custom sets created earlier.</li>
+</ol>
+
+<p>After all the processing, I had 1334332 samples of training data and 148203 samples of testing data.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post, I setup the problem I&rsquo;m trying to solve, selected the dataset, and preprocessed it to get it ready for modeling. In the next post, I&rsquo;ll use FastAI&rsquo;s tabular learner to tackle the structured data and predict the product price only using that data component.</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://sudarshan85.github.io/tags/machine-learning/">machine learning</a>&nbsp;
+            
+              <a href="https://sudarshan85.github.io/tags/fastai/">fastai</a>&nbsp;
+            
+              <a href="https://sudarshan85.github.io/tags/mercari/">mercari</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;text=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation&amp;via=sudarshan0522"
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;description=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://sudarshan85.github.io/post/error_function/" data-toggle="tooltip" data-placement="top" title="Check Your Error Function">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "iamshaun" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:sudarshan85@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://plus.google.com/&#43;SudarshanSrinivasan" title="Google&#43;">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/sudarshan85" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/sudarshan0522" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://reddit.com/u/learning_agent" title="Reddit">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-reddit-alien fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/sudarshan-srinivasan-10aa903a" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://sudarshan85.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="sudarshan85.github.io">Sudarshan</a>
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://sudarshan85.github.io">A Learning Agent&#39;s Journal</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.40.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://sudarshan85.github.io/js/main.js"></script>
+<script src="https://sudarshan85.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://sudarshan85.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
