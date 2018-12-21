@@ -349,7 +349,7 @@
            .label_from_df(cols=dep_var, label_cls=FloatList, log=True)
            .add_test(TabularList.from_df(test_df, path=path, cat_names=cat_vars, cont_names=[])) 
            .databunch())</pre></div>
-<p>This creates a new databunch with that is ready for training. <code>get_rdm_idx</code> is my own function that just returns a list of random indices that can be passed to set up a validation set. In the <a href="(https://sudarshan85.github.io/post/mercari_1/)">previous</a> post, I had a 10% cut out of my training data for my test set. From the rest 90%, I setup 20% for my validation set. My network architecture (including dropout values) are the same from the lesson. I also followed the same training procedure. After training for 15 epochs, I was able to get:</p>
+<p>This creates a new databunch with that is ready for training. <code>get_rdm_idx</code> is my own function that just returns a list of random indices that can be passed to set up a validation set. In the <a href="https://sudarshan85.github.io/post/mercari_1/">previous</a> post, I had a 10% cut out of my training data for my test set. From the rest 90%, I setup 20% for my validation set. My network architecture (including dropout values) are the same from the lesson. I also followed the same training procedure. After training for 15 epochs, I was able to get:</p>
 
 <table>
 <thead>
