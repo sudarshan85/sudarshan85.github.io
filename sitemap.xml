@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://sudarshan85.github.io/post/mercari_2/</loc>
+    <lastmod>2018-12-21T16:37:16-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://sudarshan85.github.io/post/mercari_1/</loc>
     <lastmod>2018-12-18T15:14:19-05:00</lastmod>
   </url>
@@ -19,7 +24,7 @@
   
   <url>
     <loc>https://sudarshan85.github.io/</loc>
-    <lastmod>2018-12-18T15:14:19-05:00</lastmod>
+    <lastmod>2018-12-21T16:37:16-05:00</lastmod>
   </url>
   
   <url>
@@ -28,20 +33,14 @@
   </url>
   
   <url>
-    <loc>https://sudarshan85.github.io/tags/fastai/</loc>
-    <lastmod>2018-12-18T15:14:19-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://sudarshan85.github.io/tags/machine-learning/</loc>
-    <lastmod>2018-12-18T15:14:19-05:00</lastmod>
+    <lastmod>2018-12-21T16:37:16-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://sudarshan85.github.io/tags/mercari/</loc>
-    <lastmod>2018-12-18T15:14:19-05:00</lastmod>
+    <lastmod>2018-12-21T16:37:16-05:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -53,13 +52,19 @@
   
   <url>
     <loc>https://sudarshan85.github.io/post/</loc>
-    <lastmod>2018-12-18T15:14:19-05:00</lastmod>
+    <lastmod>2018-12-21T16:37:16-05:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://sudarshan85.github.io/tags/structured/</loc>
+    <lastmod>2018-12-21T16:37:16-05:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://sudarshan85.github.io/tags/</loc>
-    <lastmod>2018-12-18T15:14:19-05:00</lastmod>
+    <lastmod>2018-12-21T16:37:16-05:00</lastmod>
     <priority>0</priority>
   </url>
   

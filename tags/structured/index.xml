@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Mercari on A Learning Agent&#39;s Journal</title>
-    <link>https://sudarshan85.github.io/tags/mercari/</link>
-    <description>Recent content in Mercari on A Learning Agent&#39;s Journal</description>
+    <title>Structured on A Learning Agent&#39;s Journal</title>
+    <link>https://sudarshan85.github.io/tags/structured/</link>
+    <description>Recent content in Structured on A Learning Agent&#39;s Journal</description>
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>sudarshan85@gmail.com (Sudarshan)</managingEditor>
     <webMaster>sudarshan85@gmail.com (Sudarshan)</webMaster>
     <lastBuildDate>Fri, 21 Dec 2018 16:37:16 -0500</lastBuildDate>
     
-	<atom:link href="https://sudarshan85.github.io/tags/mercari/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://sudarshan85.github.io/tags/structured/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,15 +19,6 @@
       <author>sudarshan85@gmail.com (Sudarshan)</author>
       <guid>https://sudarshan85.github.io/post/mercari_2/</guid>
       <description>Introduction This is my second post in a series of six exploring deep learning with structured and unstructured data with the FastAI library. Be sure to check out my post on data preparation. In this post, I&amp;rsquo;m going to describe my efforts in building a deep learning model that only uses structured data. My notebook for building this model can be found here. Much of the material here, including code and ideas, are taken on FastAI&amp;rsquo;s notebook on tabular data with the Rossmann Store Sales Kaggle dataset and the paper titled Entity Embeddings of Categorical Variables  by Cheng Guo and Felix Berkhahn.</description>
-    </item>
-    
-    <item>
-      <title>Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment Setup and Data Preparation</title>
-      <link>https://sudarshan85.github.io/post/mercari_1/</link>
-      <pubDate>Tue, 18 Dec 2018 15:14:19 -0500</pubDate>
-      <author>sudarshan85@gmail.com (Sudarshan)</author>
-      <guid>https://sudarshan85.github.io/post/mercari_1/</guid>
-      <description>Introduction Data comes in various forms such as images, text, and tabular form. Deep learning can be applied to each of these areas and has excelled by giving state-of-art results. In this blog post series, I&amp;rsquo;m going to explore how to apply Deep Learning to a mixture of data components, specifically, text data and tabular data. This is part of a bigger research project that I&amp;rsquo;m working on, which uses medical data (excluding images) which often consists of different types of data.</description>
     </item>
     
   </channel>

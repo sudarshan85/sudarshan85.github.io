@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
-  <title>Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment and Data Preparation</title>
-  <meta property="og:title" content="Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment and Data Preparation" />
+  <title>Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment Setup and Data Preparation</title>
+  <meta property="og:title" content="Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment Setup and Data Preparation" />
   <meta name="twitter:title" content="Deep Learning with Structured and Unstructured Data with FastAI - Part …" />
   <meta name="description" content="Introduction Data comes in various forms such as images, text, and tabular form. Deep learning can be applied to each of these areas and has excelled by giving state-of-art results. In this blog post series, I&rsquo;m going to explore how to apply Deep Learning to a mixture of data components, specifically, text data and tabular data. This is part of a bigger research project that I&rsquo;m working on, which uses medical data (excluding images) which often consists of different types of data.">
   <meta property="og:description" content="Introduction Data comes in various forms such as images, text, and tabular form. Deep learning can be applied to each of these areas and has excelled by giving state-of-art results. In this blog post series, I&rsquo;m going to explore how to apply Deep Learning to a mixture of data components, specifically, text data and tabular data. This is part of a bigger research project that I&rsquo;m working on, which uses medical data (excluding images) which often consists of different types of data.">
@@ -148,7 +148,7 @@
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
             <div class="post-heading">
-              <h1>Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment and Data Preparation</h1>
+              <h1>Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment Setup and Data Preparation</h1>
                 
                 
                   <span class="post-meta">
@@ -158,7 +158,7 @@
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 6 minutes (1179 words)
+  <i class="fa fa-clock-o"></i> 7 minutes (1380 words)
   
   
 </span>
@@ -193,7 +193,7 @@
 <ol>
 <li>Environment and Data Preparation (this post)</li>
 <li>Building Model with Structured Data</li>
-<li>Fine-Tuning Language Model with Unstrctured Data</li>
+<li>Fine-Tuning Language Model with Unstructured Data</li>
 <li>Building Model with Unstructured Data</li>
 <li>Building Model with Full Dataset</li>
 <li>Compare, Contrast, and Discuss Model Performance</li>
@@ -203,13 +203,13 @@
 
 <h2 id="dataset">Dataset</h2>
 
-<p>As I mentioned earlier, medical data often include structured and unstructured information together. Typically, when deep learing models have more data to work with, they provide better results. Unfortunately, medical data is very messy and there are privacy concerns in accessing them. So, when I started on this project, I wanted to build my architecture using a dataset that has been cleaned and ready to use. So I turned to <a href="www.kaggle.com">Kaggle</a>!</p>
+<p>As I mentioned earlier, medical data often include structured and unstructured information together. Typically, when deep learning models have more data to work with, they provide better results. Unfortunately, medical data is very messy and there are privacy concerns in accessing them. So, when I started on this project, I wanted to build my architecture using a dataset that has been cleaned and ready to use. So I turned to <a href="www.kaggle.com">Kaggle</a>!</p>
 
 <p>Surprisingly, I couldn&rsquo;t find many datasets that actually included both structured and unstructured information together. There were plenty of image datasets, NLP datasets that contained only text, and tabular datasets. After a bit of searching, I found a dataset that fit my needs: <a href="https://www.kaggle.com/c/mercari-price-suggestion-challenge">Mercari Price Suggestion Challenge</a>. This competition concluded 10 months ago.</p>
 
-<p><a href="https://www.mercari.com/">Mercari</a> is Japan’s biggest community-powered shopping app. Sellers post items that they want to sell along with an asking price. Mercari offers pricing suggestions to them. The objective of this competition is to build an algorithm that automatically suggests the right product prices. The data provided including user-inputted text descriptions of their products (unstructured data component), including details like product category name, brand name, and item condition (structured data component). The data can be downloaded using the <a href="https://github.com/Kaggle/kaggle-api">Kaggle API</a> software using the command <code>kaggle competitions download -c mercari-price-suggestion-challenge</code>.</p>
+<p><a href="https://www.mercari.com/">Mercari</a> is Japan&#146;s biggest community-powered shopping app. Sellers post items that they want to sell along with an asking price. Mercari offers pricing suggestions to them. The objective of this competition is to build an algorithm that automatically suggests the right product prices. The data provided including user-inputted text descriptions of their products (unstructured data component), including details like product category name, brand name, and item condition (structured data component). The data can be downloaded using the <a href="https://github.com/Kaggle/kaggle-api">Kaggle API</a> software using the command <code>Kaggle competitions download -c Mercari-price-suggestion-challenge</code>.</p>
 
-<p>This is a <em>Kernals only</em> competition, wherein you only provide a kernal (aka a script/code) which is then run on Kaggle servers to produce output and compare results. My objective for working with this dataset is not necessarily to get a good score. It&rsquo;s more so to learn how to build an end-to-end architecture with the FastAI library.</p>
+<p>This is a <em>Kernels only</em> competition, wherein you only provide a kernel (aka a script/code) which is then run on Kaggle servers to produce output and compare results. My objective for working with this dataset is not necessarily to get a good score. It&rsquo;s more so to learn how to build an end-to-end architecture with the FastAI library.</p>
 
 <h2 id="environment-setup">Environment Setup</h2>
 
@@ -221,7 +221,7 @@
 
 <h3 id="details">Details</h3>
 
-<p>The data consists of 3 tab seperated files:</p>
+<p>The data consists of 3 tab separated files:</p>
 
 <table>
 <thead>
@@ -236,24 +236,24 @@
 <tr>
 <td align="center"><code>train.tsv</code></td>
 <td align="center">323</td>
-<td align="center">1,482,535</td>
+<td align="center">1482535</td>
 </tr>
 
 <tr>
 <td align="center"><code>test.tsv</code></td>
 <td align="center">148</td>
-<td align="center">693,359</td>
+<td align="center">693359</td>
 </tr>
 
 <tr>
 <td align="center"><code>test_stg2.tsv</code></td>
 <td align="center">737</td>
-<td align="center">3,460,725</td>
+<td align="center">3460725</td>
 </tr>
 </tbody>
 </table>
 
-<p>Note that since, I&rsquo;m not really competing in the competition, I don&rsquo;t the data in the test sets except for their <code>item_descrption</code> for building the language model.</p>
+<p>Note that since, I&rsquo;m not really competing in the competition, I don&rsquo;t the data in the test sets except for their <code>item_description</code> for building the language model.</p>
 
 <p>There are 8 columns in the <code>train.tsv</code>:</p>
 
@@ -264,6 +264,7 @@
 <th align="center">Type</th>
 <th align="center">Cardinality</th>
 <th align="center">Missing</th>
+<th align="center">Details (from Kaggle)</th>
 </tr>
 </thead>
 
@@ -273,6 +274,7 @@
 <td align="center">Continuous</td>
 <td align="center">N/A</td>
 <td align="center">0</td>
+<td align="center">The ID of the listing</td>
 </tr>
 
 <tr>
@@ -280,6 +282,7 @@
 <td align="center">Text</td>
 <td align="center">N/A</td>
 <td align="center">0</td>
+<td align="center">The title of the listing. Note that we have cleaned the data to remove text that look like prices (e.g.$20) to avoid leakage. These removed prices are represented as [rm]</td>
 </tr>
 
 <tr>
@@ -287,20 +290,23 @@
 <td align="center">Categorical</td>
 <td align="center">5</td>
 <td align="center">0</td>
+<td align="center">The condition of the items provided by the seller</td>
 </tr>
 
 <tr>
 <td align="center"><code>category_name</code></td>
 <td align="center">Categorical</td>
-<td align="center">1,287</td>
-<td align="center">6,327</td>
+<td align="center">1287</td>
+<td align="center">6327</td>
+<td align="center">Category of the listing</td>
 </tr>
 
 <tr>
 <td align="center"><code>brand_name</code></td>
 <td align="center">Categorical</td>
-<td align="center">4,809</td>
-<td align="center">6,32682</td>
+<td align="center">4809</td>
+<td align="center">632682</td>
+<td align="center">N/A</td>
 </tr>
 
 <tr>
@@ -308,6 +314,7 @@
 <td align="center">Continuous</td>
 <td align="center">N/A</td>
 <td align="center">0</td>
+<td align="center">The price that the item was sold for. This is the target variable that you will predict. The unit is USD. This column doesn&rsquo;t exist in test.tsv since that is what you will predict.</td>
 </tr>
 
 <tr>
@@ -315,6 +322,7 @@
 <td align="center">Binary</td>
 <td align="center">2</td>
 <td align="center">0</td>
+<td align="center">1 if shipping fee is paid by seller and 0 by buyer</td>
 </tr>
 
 <tr>
@@ -322,6 +330,7 @@
 <td align="center">Text</td>
 <td align="center">N/A</td>
 <td align="center">4</td>
+<td align="center">The condition of the items provided by the seller</td>
 </tr>
 </tbody>
 </table>
@@ -330,13 +339,22 @@
 
 <h3 id="preprocessing">Preprocessing</h3>
 
-<p>I do a couple of preprocessing steps to the entire dataset. These steps are available in the nobebook. Basically, I do the following:</p>
+<p>I do a couple of preprocessing steps to the entire dataset. These steps are available in the notebook. Basically, I do the following:</p>
 
 <ul>
 <li>Remove records with prices <code>&lt; $3</code> as Mercari does not allow postings in that price range.</li>
 <li>Extract 3 sub categories from <code>category_name</code>. For example, a category name &ldquo;Men/Tops/T-shirts&rdquo; is actually made up of a &ldquo;main&rdquo; (<code>main_cat</code>) category &ldquo;Men&rdquo; and two sub categories (<code>sub_cat1</code> and <code>sub_cat2</code>) &ldquo;Tops&rdquo; and &ldquo;T-shirts&rdquo;. I extract them and add them as new columns to the dataset. These will also be categorical variables.</li>
 <li>Replace <code>na</code>&rsquo;s in the <code>item_description</code> with the word &ldquo;missing&rdquo;, as FastAI library doesn&rsquo;t like <code>nan</code>&rsquo;s for text during langauge modelling.</li>
 </ul>
+
+<p>Below are the details of the extracted categorical variables:
+|    Name    | Cardinality |
+|:&mdash;&mdash;&mdash;-:|:&mdash;&mdash;&mdash;&ndash;:|
+| <code>main_cat</code> |      10     |
+| <code>sub_cat1</code> |     113     |
+| <code>sub_cat2</code> |     870     |</p>
+
+<p>These have same number of missing values as <code>category_name</code>.</p>
 
 <h3 id="dataset-creation">Dataset Creation</h3>
 
@@ -349,7 +367,20 @@
 <li>Unstructured Data: I include <code>['train_id', 'name', 'price', 'item_description']</code> as part of my unstructured variables and create a structured training and testing dataset from the custom sets created earlier.</li>
 </ol>
 
-<p>After all the processing, I had 1,334,332 samples of training data and 148,203 samples of testing data. The competition <a href="https://www.kaggle.com/c/mercari-price-suggestion-challenge#evaluation">uses</a> Root Mean Squared Logarithmic Error (RMSLE) as the judging metric.</p>
+<p>After all the processing, I had 1334332 samples of training data and 148203 samples of testing data.</p>
+
+<h3 id="error-function">Error Function</h3>
+
+<p>The competition <a href="https://www.kaggle.com/c/mercari-price-suggestion-challenge#evaluation">uses</a> Root Mean Squared Logarithmic Error (RMSLE) as the judging metric. This is calculated as:</p>
+
+<p>$\epsilon$ = $\sqrt{\frac{1}{n}\sum(log(p_i+1)-log(a_i+1))^2}$</p>
+
+<p>where,
+* $\epsilon$ is the RMSLE value (score)
+* <em>n</em> is the total number of observations in the dataset
+* $p_i$ is the predicted price for product <em>i</em>
+* $a_i$ is the actual sale price for product <em>i</em>
+* $log(x)$ is the natural logrithm of <em>x</em></p>
 
 <h2 id="conclusion">Conclusion</h2>
 
@@ -360,8 +391,6 @@
           <div class="blog-tags">
             
               <a href="https://sudarshan85.github.io/tags/machine-learning/">machine learning</a>&nbsp;
-            
-              <a href="https://sudarshan85.github.io/tags/fastai/">fastai</a>&nbsp;
             
               <a href="https://sudarshan85.github.io/tags/mercari/">mercari</a>&nbsp;
             
@@ -376,7 +405,7 @@
 
 
 <li>
-    <a href="//twitter.com/share?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;text=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation&amp;via=sudarshan0522"
+    <a href="//twitter.com/share?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;text=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20Setup%20and%20Data%20Preparation&amp;via=sudarshan0522"
        target="_blank" alt="" title="Share on Twitter">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -407,7 +436,7 @@
 
 
 <li>
-    <a href="//reddit.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation" target="_blank" title="Share on Reddit">
+    <a href="//reddit.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20Setup%20and%20Data%20Preparation" target="_blank" title="Share on Reddit">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
@@ -417,7 +446,7 @@
 
 
 <li>
-    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation" target="_blank"
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20Setup%20and%20Data%20Preparation" target="_blank"
        title="Share on LinkedIn">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -428,7 +457,7 @@
 
 
 <li>
-    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation" target="_blank"
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20Setup%20and%20Data%20Preparation" target="_blank"
        title="Share on StumbleUpon">
         <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -439,7 +468,7 @@
 
 
 <li>
-    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;description=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20and%20Data%20Preparation" target="_blank"
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_1%2f&amp;description=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%201%3a%20Environment%20Setup%20and%20Data%20Preparation" target="_blank"
        title="Share on Pinterest">
          <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
@@ -460,6 +489,10 @@
               <a href="https://sudarshan85.github.io/post/error_function/" data-toggle="tooltip" data-placement="top" title="Check Your Error Function">&larr; Previous Post</a>
             </li>
           
+          
+            <li class="next">
+              <a href="https://sudarshan85.github.io/post/mercari_2/" data-toggle="tooltip" data-placement="top" title="Deep Learning with Structured and Unstructured Data with FastAI - Part 2: Structured Data Model">Next Post &rarr;</a>
+            </li>
           
         </ul>
       

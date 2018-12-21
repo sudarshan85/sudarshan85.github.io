@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Deep Learning with Structured and Unstructured Data with FastAI - Part 2: Structured Data Model</title>
+  <meta property="og:title" content="Deep Learning with Structured and Unstructured Data with FastAI - Part 2: Structured Data Model" />
+  <meta name="twitter:title" content="Deep Learning with Structured and Unstructured Data with FastAI - Part …" />
+  <meta name="description" content="Introduction This is my second post in a series of six exploring deep learning with structured and unstructured data with the FastAI library. Be sure to check out my post on data preparation. In this post, I&rsquo;m going to describe my efforts in building a deep learning model that only uses structured data. My notebook for building this model can be found here. Much of the material here, including code and ideas, are taken on FastAI&rsquo;s notebook on tabular data with the Rossmann Store Sales Kaggle dataset and the paper titled Entity Embeddings of Categorical Variables  by Cheng Guo and Felix Berkhahn.">
+  <meta property="og:description" content="Introduction This is my second post in a series of six exploring deep learning with structured and unstructured data with the FastAI library. Be sure to check out my post on data preparation. In this post, I&rsquo;m going to describe my efforts in building a deep learning model that only uses structured data. My notebook for building this model can be found here. Much of the material here, including code and ideas, are taken on FastAI&rsquo;s notebook on tabular data with the Rossmann Store Sales Kaggle dataset and the paper titled Entity Embeddings of Categorical Variables  by Cheng Guo and Felix Berkhahn.">
+  <meta name="twitter:description" content="Introduction This is my second post in a series of six exploring deep learning with structured and unstructured data with the FastAI library. Be sure to check out my post on data preparation. In this …">
+  <meta name="author" content="Sudarshan"/>
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@sudarshan0522" />
+  <meta name="twitter:creator" content="@sudarshan0522" />
+  <meta property="og:url" content="https://sudarshan85.github.io/post/mercari_2/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="A Learning Agent&#39;s Journal" />
+
+  <meta name="generator" content="Hugo 0.40.1" />
+  <link rel="canonical" href="https://sudarshan85.github.io/post/mercari_2/" />
+  <link rel="alternate" href="https://sudarshan85.github.io/index.xml" type="application/rss+xml" title="A Learning Agent&#39;s Journal">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://sudarshan85.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://sudarshan85.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://sudarshan85.github.io/css/codeblock.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://sudarshan85.github.io">A Learning Agent&#39;s Journal</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Deep Learning with Structured and Unstructured Data with FastAI - Part 2: Structured Data Model</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on December 21, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 10 minutes (2056 words)
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="introduction">Introduction</h2>
+
+<p>This is my second post in a series of six exploring deep learning with structured and unstructured data with the <a href="docs.fast.ai">FastAI</a> library. Be sure to check out my post on <a href="https://sudarshan85.github.io/post/mercari_1/">data preparation</a>. In this post, I&rsquo;m going to describe my efforts in building a deep learning model that only uses structured data. My notebook for building this model can be found <a href="http://nbviewer.jupyter.org/github/sudarshan85/kaggle-mercari/blob/master/Structured-Pred.ipynb">here</a>. Much of the material here, including code and ideas, are taken on FastAI&rsquo;s <a href="http://nbviewer.jupyter.org/github/fastai/course-v3/blob/master/nbs/dl1/lesson6-rossmann.ipynb">notebook</a> on tabular data with the <a href="https://www.kaggle.com/c/rossmann-store-sales">Rossmann Store Sales</a> Kaggle dataset and the paper titled <a href="http://nbviewer.jupyter.org/github/fastai/course-v3/blob/master/nbs/dl1/lesson6-rossmann.ipynb">Entity Embeddings of Categorical Variables
+</a> by Cheng Guo and Felix Berkhahn.</p>
+
+<p>Structured data contain variables that can be represented in a tabular form. These include categorical variables which has a limited number of unique values (aka cardinality) or continuous variables which are just real numbers. While continuous variables can be fed directly into the input layer of a neural network (i.e., their values), categorical variables requires some special processing.</p>
+
+<h2 id="embeddings">Embeddings</h2>
+
+<p>The magic sauce of representing categorical variables into a manner suitable for a deep learning model is the concept of <em>embeddings</em>. Let&rsquo;s look at an example of a categorical variable from the dataset to understand exactly what embeddings are and how they are helpful. One of the categorical variables that was extracted during preprocessing is called <code>main_cat</code> which represents the main category that the item belongs too and has a cardinality of 11 (including <code>na</code>) i.e., there 10 unique <code>main_cat</code> categories in this variable. These are <code>['Men', 'Electronics', 'Women', 'Home', 'Sports &amp; Outdoors', 'Vintage &amp; Collectibles', 'Beauty', 'Other', 'Kids', 'Handmade', nan]</code>. These are given as <code>string</code> variables which can&rsquo;t be fed into the model directly. They have to be converted into numbers.</p>
+
+<p>One of the most common way of representing categorical variables is by using <a href="https://en.wikipedia.org/wiki/One-hot"><em>one-hot</em></a> encoding. In one-hot encoding, each category are given a unique index. Following this, each category is represented by a binary vector which has a single <code>1</code> value at the index corresponding to the index of the category. Thus, the size of the vector representing the category will be equal to the cardinality of the categorical variable. For example, the one-hot representation of the <code>main_cat</code> variable would be:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Category</th>
+<th align="center">Index</th>
+<th align="center">Vector</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">Men</td>
+<td align="center">0</td>
+<td align="center"><code>[1,0,0,0,0,0,0,0,0,0,0]</code></td>
+</tr>
+
+<tr>
+<td align="center">Electronics</td>
+<td align="center">1</td>
+<td align="center"><code>[0,1,0,0,0,0,0,0,0,0,0]</code></td>
+</tr>
+
+<tr>
+<td align="center">Women</td>
+<td align="center">2</td>
+<td align="center"><code>[0,0,1,0,0,0,0,0,0,0,0]</code></td>
+</tr>
+
+<tr>
+<td align="center">Home</td>
+<td align="center">3</td>
+<td align="center"><code>[0,0,0,1,0,0,0,0,0,0,0]</code></td>
+</tr>
+
+<tr>
+<td align="center">Sports &amp; Outdoors</td>
+<td align="center">4</td>
+<td align="center"><code>[0,0,0,0,1,0,0,0,0,0,0]</code></td>
+</tr>
+
+<tr>
+<td align="center">Vintage &amp; Collectibles</td>
+<td align="center">5</td>
+<td align="center"><code>[0,0,0,0,0,1,0,0,0,0,0]</code></td>
+</tr>
+
+<tr>
+<td align="center">Beauty</td>
+<td align="center">6</td>
+<td align="center"><code>[0,0,0,0,0,0,1,0,0,0,0]</code></td>
+</tr>
+
+<tr>
+<td align="center">Other</td>
+<td align="center">7</td>
+<td align="center"><code>[0,0,0,0,0,0,0,1,0,0,0]</code></td>
+</tr>
+
+<tr>
+<td align="center">Kids</td>
+<td align="center">8</td>
+<td align="center"><code>[0,0,0,0,0,0,0,0,1,0,0]</code></td>
+</tr>
+
+<tr>
+<td align="center">Handmade</td>
+<td align="center">9</td>
+<td align="center"><code>[0,0,0,0,0,0,0,0,0,1,0]</code></td>
+</tr>
+
+<tr>
+<td align="center"><code>nan</code></td>
+<td align="center">10</td>
+<td align="center"><code>[0,0,0,0,0,0,0,0,0,0,1]</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>During implementation the binary vector representing a single category would become a binary matrix of input values for the machine learning algorithm (think mini-batch of inputs).</p>
+
+<p>While simple to implement, one-hot encoding has two major disadvantages:
+1. By representing categories by binary vectors, the relationship between these categories is essentially lost. One-hot encoding a category only tells us whether it is present or not and nothing else. Why is that relevant? Because, these relationships are important for our algorithm to learn and one-hot encoding does not allow that learning. Think about the following examples:
+    - <code>Men</code>, <code>Women</code>, and <code>Kids</code>. These categories are associated with people.
+    - <code>Beauty</code> and <code>Women</code>. Women, in general, tend to buy beauty items.
+    - <code>Handmade</code> and <code>Vintage &amp; Collectibles</code>. Handmade items may include crafts which are likely to be sold as collectibles.
+2. By nature, binary matrices are sparse, which take lots of storage and results in unrealistic computational requirements.</p>
+
+<p>Clearly, we need better way to convert this strings to numbers. Well, here&rsquo;s a crazy idea. Why not just give each category a bunch of random numbers. More specifically, represent each category with random vector of some size (we get to pick this size). The reason this is useful is because we can make that vector (or a matrix) <em>learnable</em>. In other words, this matrix is just like any other weight matrix in our neural network and can be learned through gradient descent.</p>
+
+<p>This is called an <strong>embedding</strong> matrix. In a mathematical sense, these categories are <em>embedded</em> into a <code>d</code>-dimensional (<code>d</code> being the size of the vector) vector space, where they can learn relationships based from the data. Furthermore, each coordinate of that embedded vector would represent a feature of that category and these get updated as part of the learning process. Embedding is a powerful concept, most known for their use in text (like word embeddings which is basically the same concept on a bigger scale).</p>
+
+<p>Every layer in a neural network is a result of a matrix multiplication. So is our embedding matrix. To get the embedding vector for a particular input, we just perform a dot product of its one-hot encoding with the embedding matrix and we get the corresponding vector. Interestingly, this dot product is the same as an array-lookup where given an index we just lookup its embedding vector. An <em>embedding layer</em> essentially does this. It does a array lookup to retrieve an embedding vector which then gets fed into the neural network. This is possible because looking up an embedding vector in an array is <em>mathematically</em> equivalent to a matrix product. Being just an array lookup it is fast and doesn&rsquo;t take up lots of storage by saving a bunch of zeros.</p>
+
+<p>As an example, the following table shows how the categories (only showing a couple) might be embedded into a lower dimensional vector space:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Category</th>
+<th align="center">Index</th>
+<th align="center">Vector</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">Men</td>
+<td align="center">0</td>
+<td align="center"><code>[0.0367, 0.1299, 0.6969, 0.9284, 0.0894, 0.5121]</code></td>
+</tr>
+
+<tr>
+<td align="center">Electronics</td>
+<td align="center">1</td>
+<td align="center"><code>[0.4109, 0.3557, 0.6323, 0.6099, 0.6077, 0.4454]</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>Please note that what I show here is just an example. These values are random values and could maybe used for initializing the embedding vectors. These vectors (more specifically the embedding matrix) would be updated as part of training with gradient descent. Each coordinate of these vectors could represent a feature and the entire vector would be called the <em>feature vector</em>. This sort of representation of the data is also know as <a href="https://www.districtdatalabs.com/nlp-research-lab-part-1-distributed-representations/">distributed representation</a>.</p>
+
+<p>How do we choose the dimension of the embedding vector? There is really no hard and fast rule this choice. Digging into the FastAI source code, I was able to find the <a href="https://github.com/fastai/fastai/blob/master/fastai/tabular/data.py#L15">function</a> that calculates this for us:</p>
+<div class="highlight"><pre class="chroma">def emb_sz_rule(n_cat:int)-&gt;int: return min(600, round(1.6 * n_cat**0.56))</pre></div>
+<p>Basically, we won&rsquo;t get ever get an embedding size of more than 600, which makes sense, since even word embeddings have only a size of 300-400 and there way more words than any categorical variable that we may come across. As for the other formula, I&rsquo;m not sure how they came up with it, but it seems to work!</p>
+
+<h2 id="entity-embeddings-of-categorical-variables">Entity Embeddings of Categorical Variables</h2>
+
+<p>Here I&rsquo;m going to give a brief review of the paper which is what the FastAI&rsquo;s Rossmann notebook is based upon. This paper is very well written and has one of the best abstracts I&rsquo;ve read. Following are direct quotes from the paper&rsquo;s abstracts that basically tells us everything we need to know about the paper:</p>
+
+<ol>
+<li><em>&ldquo;We map categorical variables in a function approximation problem into Euclidean spaces, which are the entity embeddings of the categorical variables.&rdquo;</em> We all know that neural networks are <a href="http://neuralnetworksanddeeplearning.com/chap4.html">universal function approximators</a> and this sentence is just setting up the problem to be in that form so that they can use neural networks for solving it. Entity embeddings is just a fancy name they use for embeddings of categorical variables.</li>
+<li><em>&ldquo;Entity embedding not only reduces memory usage and speeds up neural networks compared with one-hot encoding, but more importantly by mapping similar values close to each other in the embedding space it reveals the intrinsic properties of the categorical variables.&rdquo;</em> This pretty much sums up my explanations about the disadvantages of one-hot encodings and how embeddings overcomes them.</li>
+<li><em>&ldquo;Entity embedding helps the neural network to generalize better when data is sparse and statistics is unknown, useful for datasets with lots of high cardinality features, where other methods tend to overfit.&rdquo;</em></li>
+<li><em>&ldquo;As entity embedding defines a distance measure for categorical variables it can be used for visualizing categorical data and for data clustering.&rdquo;</em> This is because embeddings are just vector and like any vector they can be projected onto 2D space (using techniques such as <a href="https://medium.com/@luckylwk/visualising-high-dimensional-datasets-using-pca-and-t-sne-in-python-8ef87e7915b">PCA and t-SNE</a>). Once they are projected into 2D, we can plot using standard plotting tools.</li>
+</ol>
+
+<p>In their introduction, they argue that, while neural networks can approximate any continuous and piece-wise continuous functions, it is not suitable to approximate arbitrary non-continuous functions as it assumes certain level of continuity in its general form. Structured data do not typically present themselves as having a continuous. However, with the correct representation, we can reveal the continuity of the data, thus increasing the power of neural networks to learn the data.</p>
+
+<p>One-hot encodings has two shortcomings: <em>&ldquo;First when we have many high cardinality features one-hot encoding often results in an unrealistic amount of computational. Second, it treats different values of categorical variables completely independent of each other and often ignores the informative relations between them.&rdquo;</em></p>
+
+<p>They define structured data as <em>&ldquo;data collected and organized in a table format with columns representing different features (variables) or target values and rows representing different samples.&rdquo;</em> Their objective of entity embedding is to map discrete values to a multi-dimensional space where values with similar function output are close to each other. Once we have an embedding layer which connects to the one-hot encoding layer via an embedding matrix (this is basically an array lookup), we can train the weights of the matrix in the same way as the parameters of other neural networks.</p>
+
+<p>After entity embeddings are used to represent all categorical variables, these are concatenated with any continuous variables and is fed like a normal input layer in a neural network with other layers built on top of it. <em>&ldquo;In this way, the entity embedding layer learns about the intrinsic properties of each category, while the deeper layers form complex combinations of them.&rdquo;</em> This is figure from their paper that shows the architecture of their model:</p>
+
+<p><img src="/img/ee.png" alt="Image" /></p>
+
+<p>Other interesting aspects of their paper is that, they learned the embeddings of the categorical variables and used these embeddings as input to traditional machine learning models (random forest, xgboost, KNN) and got better performance than other forms of input. This indicates representing categorical data with embeddings learns and uses the intrinsic properties and relationships between the categories.</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<p>You can find my notebook <a href="http://nbviewer.jupyter.org/github/sudarshan85/kaggle-mercari/blob/master/Structured-Pred.ipynb">here</a>. Recall that objective here is given only the categorical variables in the data, we want to predict the price of a product. I pretty much followed the same steps that was done in the <a href="http://nbviewer.jupyter.org/github/fastai/course-v3/blob/master/nbs/dl1/lesson6-rossmann.ipynb">Rossman notebook</a>. Unlike Rossmann, my data does not have any continuous variables so, I just passed an empty list for creating my databunch. Most of the action happens here:</p>
+<div class="highlight"><pre class="chroma">data_str = (TabularList.from_df(train_df, path=path, cat_names=cat_vars, cont_names=[], procs=[Categorify])
+           .split_by_idx(get_rdm_idx(train_df))
+           .label_from_df(cols=dep_var, label_cls=FloatList, log=True)
+           .add_test(TabularList.from_df(test_df, path=path, cat_names=cat_vars, cont_names=[])) 
+           .databunch())</pre></div>
+<p>This creates a new databunch with that is ready for training. <code>get_rdm_idx</code> is my own function that just returns a list of random indices that can be passed to set up a validation set. In the <a href="(https://sudarshan85.github.io/post/mercari_1/)">previous</a> post, I had a 10% cut out of my training data for my test set. From the rest 90%, I setup 20% for my validation set. My network architecture (including dropout values) are the same from the lesson. I also followed the same training procedure. After training for 15 epochs, I was able to get:</p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Metric</th>
+<th align="center">Value</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center">Training Loss</td>
+<td align="center">0.326233</td>
+</tr>
+
+<tr>
+<td align="center">Validation Loss</td>
+<td align="center">0.331211</td>
+</tr>
+
+<tr>
+<td align="center">RMSLE</td>
+<td align="center">0.538608</td>
+</tr>
+</tbody>
+</table>
+
+<p>I also did inference on my test set and compared it against the actual values I had. For my test set, I got an RMSLE of 0.543. Please note that this value cannot really be compared to the leaderboard scores. Although if you did compare, its not very good (around 1100), which is to be expected as I haven&rsquo;t used the <code>item_description</code> information at all (which I will for my final model).</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post, I covered details about embeddings and how they help us get better performance in neural networks. I also went over details about the &ldquo;Entity Embeddings of Categorical Variables&rdquo; paper and my implementation of a deep learning model with FastAI with only structured data from the Mercari dataset. My next post would tackle the use of the unstructured data, specifically, the data <code>name</code> and <code>item_description</code> columns. In particular, next post will talk about fine-tuning a language model with this data using a pre-trained language model, which can then be used for the price prediction task.</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://sudarshan85.github.io/tags/machine-learning/">machine learning</a>&nbsp;
+            
+              <a href="https://sudarshan85.github.io/tags/mercari/">mercari</a>&nbsp;
+            
+              <a href="https://sudarshan85.github.io/tags/structured/">structured</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_2%2f&amp;text=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%202%3a%20Structured%20Data%20Model&amp;via=sudarshan0522"
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_2%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_2%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_2%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%202%3a%20Structured%20Data%20Model" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_2%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%202%3a%20Structured%20Data%20Model" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_2%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%202%3a%20Structured%20Data%20Model" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_2%2f&amp;description=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%202%3a%20Structured%20Data%20Model" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://sudarshan85.github.io/post/mercari_1/" data-toggle="tooltip" data-placement="top" title="Deep Learning with Structured and Unstructured Data with FastAI - Part 1: Environment Setup and Data Preparation">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "iamshaun" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:sudarshan85@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://plus.google.com/&#43;SudarshanSrinivasan" title="Google&#43;">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/sudarshan85" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/sudarshan0522" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://reddit.com/u/learning_agent" title="Reddit">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-reddit-alien fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/sudarshan-srinivasan-10aa903a" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://sudarshan85.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="sudarshan85.github.io">Sudarshan</a>
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://sudarshan85.github.io">A Learning Agent&#39;s Journal</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.40.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://sudarshan85.github.io/js/main.js"></script>
+<script src="https://sudarshan85.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://sudarshan85.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+  </body>
+</html>
+
