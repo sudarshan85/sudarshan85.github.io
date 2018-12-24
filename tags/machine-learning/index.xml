@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>sudarshan85@gmail.com (Sudarshan)</managingEditor>
     <webMaster>sudarshan85@gmail.com (Sudarshan)</webMaster>
-    <lastBuildDate>Fri, 21 Dec 2018 16:37:16 -0500</lastBuildDate>
+    <lastBuildDate>Mon, 24 Dec 2018 12:29:21 -0500</lastBuildDate>
     
 	<atom:link href="https://sudarshan85.github.io/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Deep Learning with Structured and Unstructured Data with FastAI - Part 3: Language Model</title>
+      <link>https://sudarshan85.github.io/post/mercari_3/</link>
+      <pubDate>Mon, 24 Dec 2018 12:29:21 -0500</pubDate>
+      <author>sudarshan85@gmail.com (Sudarshan)</author>
+      <guid>https://sudarshan85.github.io/post/mercari_3/</guid>
+      <description>Introduction This is my third post in a series of six, exploring deep learning with structured and unstructured data with the FastAI library. These are the links to my earlier posts on data preparation and structured data model. In this post, I&amp;rsquo;ll be talking about language models (LM) and how I built a custom language model using the data from the name and item_description columns in the Mercari dataset using a pre-trained language model provided by FastAI.</description>
+    </item>
     
     <item>
       <title>Deep Learning with Structured and Unstructured Data with FastAI - Part 2: Structured Data Model</title>

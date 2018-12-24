@@ -7,15 +7,24 @@
     <generator>Hugo -- gohugo.io</generator>
     <managingEditor>sudarshan85@gmail.com (Sudarshan)</managingEditor>
     <webMaster>sudarshan85@gmail.com (Sudarshan)</webMaster>
-    <lastBuildDate>Fri, 21 Dec 2018 16:37:16 -0500</lastBuildDate>
+    <lastBuildDate>Mon, 24 Dec 2018 12:29:21 -0500</lastBuildDate>
     
 	<atom:link href="https://sudarshan85.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Language Model</title>
+      <link>https://sudarshan85.github.io/tags/language-model/</link>
+      <pubDate>Mon, 24 Dec 2018 12:29:21 -0500</pubDate>
+      <author>sudarshan85@gmail.com (Sudarshan)</author>
+      <guid>https://sudarshan85.github.io/tags/language-model/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Machine Learning</title>
       <link>https://sudarshan85.github.io/tags/machine-learning/</link>
-      <pubDate>Fri, 21 Dec 2018 16:37:16 -0500</pubDate>
+      <pubDate>Mon, 24 Dec 2018 12:29:21 -0500</pubDate>
       <author>sudarshan85@gmail.com (Sudarshan)</author>
       <guid>https://sudarshan85.github.io/tags/machine-learning/</guid>
       <description></description>
@@ -24,7 +33,7 @@
     <item>
       <title>Mercari</title>
       <link>https://sudarshan85.github.io/tags/mercari/</link>
-      <pubDate>Fri, 21 Dec 2018 16:37:16 -0500</pubDate>
+      <pubDate>Mon, 24 Dec 2018 12:29:21 -0500</pubDate>
       <author>sudarshan85@gmail.com (Sudarshan)</author>
       <guid>https://sudarshan85.github.io/tags/mercari/</guid>
       <description></description>
