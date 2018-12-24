@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Deep Learning with Structured and Unstructured Data with FastAI - Part 3: Language Model</title>
+  <meta property="og:title" content="Deep Learning with Structured and Unstructured Data with FastAI - Part 3: Language Model" />
+  <meta name="twitter:title" content="Deep Learning with Structured and Unstructured Data with FastAI - Part …" />
+  <meta name="description" content="Introduction This is my third post in a series of six, exploring deep learning with structured and unstructured data with the FastAI library. These are the links to my earlier posts on data preparation and structured data model. In this post, I&rsquo;ll be talking about language models (LM) and how I built a custom language model using the data from the name and item_description columns in the Mercari dataset using a pre-trained language model provided by FastAI.">
+  <meta property="og:description" content="Introduction This is my third post in a series of six, exploring deep learning with structured and unstructured data with the FastAI library. These are the links to my earlier posts on data preparation and structured data model. In this post, I&rsquo;ll be talking about language models (LM) and how I built a custom language model using the data from the name and item_description columns in the Mercari dataset using a pre-trained language model provided by FastAI.">
+  <meta name="twitter:description" content="Introduction This is my third post in a series of six, exploring deep learning with structured and unstructured data with the FastAI library. These are the links to my earlier posts on data …">
+  <meta name="author" content="Sudarshan"/>
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@sudarshan0522" />
+  <meta name="twitter:creator" content="@sudarshan0522" />
+  <meta property="og:url" content="https://sudarshan85.github.io/post/mercari_3/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="A Learning Agent&#39;s Journal" />
+
+  <meta name="generator" content="Hugo 0.40.1" />
+  <link rel="canonical" href="https://sudarshan85.github.io/post/mercari_3/" />
+  <link rel="alternate" href="https://sudarshan85.github.io/index.xml" type="application/rss+xml" title="A Learning Agent&#39;s Journal">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" integrity="sha384-wITovz90syo1dJWVh32uuETPVEtGigN07tkttEqPv+uR2SE/mbQcG7ATL28aI9H0" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://sudarshan85.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://sudarshan85.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://sudarshan85.github.io/css/codeblock.css" />
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+</head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://sudarshan85.github.io">A Learning Agent&#39;s Journal</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    <div class="avatar-container">
+      <div class="avatar-img-border">
+        
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+
+
+    
+  
+  
+  
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              <h1>Deep Learning with Structured and Unstructured Data with FastAI - Part 3: Language Model</h1>
+                
+                
+                  <span class="post-meta">
+  
+  
+  <i class="fa fa-calendar-o"></i>&nbsp;Posted on December 24, 2018
+  
+  
+  &nbsp;|&nbsp;
+  <i class="fa fa-clock-o"></i> 13 minutes (2705 words)
+  
+  
+</span>
+
+
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+<h2 id="introduction">Introduction</h2>
+
+<p>This is my third post in a series of six, exploring deep learning with structured and unstructured data with the <a href="https://docs.fast.ai/">FastAI</a> library. These are the links to my earlier posts on <a href="https://sudarshan85.github.io/post/mercari_1/">data preparation</a> and <a href="https://sudarshan85.github.io/post/mercari_2/">structured data model</a>. In this post, I&rsquo;ll be talking about language models (LM) and how I built a custom language model using the data from the <code>name</code> and <code>item_description</code> columns in the Mercari dataset using a pre-trained language model provided by FastAI. The material covered is based on FastAI&rsquo;s <a href="http://nbviewer.jupyter.org/github/fastai/course-v3/blob/master/nbs/dl1/lesson3-imdb.ipynb">IMDB notebook</a>.</p>
+
+<p>I&rsquo;ll also be covering two papers <a href="https://arxiv.org/abs/1708.02182">Regularizing and Optimizing LSTM Language Models</a> by Stephen Merity, Nitish Shirish Keskar, and Richard Socher and <a href="https://arxiv.org/abs/1801.06146">Universal Language Model Fine-tuning for Text Classification</a> by Jeremy Howard and Sebastian Ruder. These papers talk about the recurrent neural network (RNN) variant on which the language model is built.</p>
+
+<h2 id="language-model-transfer-learning">Language Model &amp; Transfer Learning</h2>
+
+<p>A LM is a model for solving a particular task in natural language processing (NLP). Given a bunch of words in a corpus a LM tries to predict the next word in the sentence. This particular task is not really that use full. But our objective here is not really the task itself, but what we get in terms of the weights of the neural network when we train the model for this task. We are interested in using these pre-trained weights on our target task. These weights form the LM and LMs represent and understand language and language structure.</p>
+
+<p>Using LMs on text datasets for solving a target task is similar to using a pre-trained model such as ImageNet to classify custom dataset of images. It is a form of <a href="ftp://ftp.cs.wisc.edu/machine-learning/shavlik-group/torrey.handbook09.pdf">transfer learning</a> which is the <em>&ldquo;improvement of learning in a new task through the transfer of knowledge from a related task that has already been learned&rdquo;</em>. This concept is very powerful because it helps us to train models faster and the resulting models are much more accurate. Unlike transfer learning in vision, in NLP transfer learning involves a few more steps.</p>
+
+<p>For vision the general recipe for transfer learning involves (from FastAI):</p>
+
+<ol>
+<li>Create model with the same architecture as the ImageNet ones such as resnet32.</li>
+<li>Initialize the model with the pre-trained weights.</li>
+<li>Freeze all the layers (i.e., block the gradients from backpropagating) except the final layer that is relevant to the task at hand.</li>
+<li>Train for a few epochs.</li>
+<li>Gradually unfreeze the lower layers and train for a few more epochs (with a lower learning rate).</li>
+</ol>
+
+<p>For NLP the general recipe for transfer learning involves (from FastAI):</p>
+
+<ol>
+<li>Create model with a LSTM language model architecture.</li>
+<li>Initialize the model with the pre-trained weights.</li>
+<li>Train the model for a few epochs.</li>
+<li>Unfreeze all layers and train for a few epochs.</li>
+<li>Save the <em>encoder</em> part of the model.</li>
+<li>Create model for the target task with the same initial architecture as the AWD-LSTM and a custom head to reflect the task.</li>
+<li>Load in the saved encoder and freeze the lower layers.</li>
+<li>Train the model for a few epochs.</li>
+<li>Gradually unfreeze lower layers and train the model for few more epochs.</li>
+</ol>
+
+<p>As you can see, transfer learning in text is a bit more involved but it brings the same advantages that it has with vision to the table.</p>
+
+<p>We can&rsquo;t just directly use the pre-trained LM on our target task. This is because our target task&rsquo;s data will contain different vocabulary and language structure that is different compared to the pre-trained model (while in vision everything is a pixel). Therefore, we need to customize the pre-trained LM for our data, i.e., we have to <em>fine-tune</em> it. Once we have fine-tuned it, we can then grab the encoder, which is just the part of the network that takes the input and encodes it into the weights, and use it for our target task. The benefit here is we don&rsquo;t start our training from scratch (random numbers). Note that, we take our fine-tuned LM and fine-tune it further for our target task.</p>
+
+<p>Finally, I want to talk about the difference between (<em>word2vec</em>) and language models, as this is something I struggled with innitally. <em>word2vec</em> is a linear model where we learn vectors for representing each word in a corpus and use these pre-trained vectors to initialize the words in our target corpus and fine-tune it for the target task. This is still transfer learning in principle but a very simplified form. A LM has way more information and influence than a word embedding does. LMs used in FastAI has 3 layer LSTM model with 1150 units in the hidden layer and an embedding size of 400, while <em>word2vec</em> typically contain 300-400 dimension vectors. Also, in word2vec, words are considered completely independent and language structure is not learned.</p>
+
+<h2 id="awd-lstm">AWD-LSTM</h2>
+
+<p>Due to their temporal nature and the need for capturing long-term relationships, LMs are usually modeled using RNNs or more specifically LSTM. However, LSTMs (and NNs in general) suffer from overfitting due to over-parametrization. Thus, it is important to regularize these models. While strategies such as dropout and batch normalization have found success in feed-forward and convolutional NN, they have not been successful in RNNs. Stephen Merity <em>et al.</em>, have proposed various regularization strategies for LSTM LMs. A detailed overview of their paper by <a href="https://www.linkedin.com/in/yashuseth/">Yashi Seth</a> can be found <a href="https://yashuseth.blog/2018/09/12/awd-lstm-explanation-understanding-language-model/">here</a>. I will briefly go over their suggested regularization strategies here:</p>
+
+<ol>
+<li><strong>Weight-Dropped LSTM</strong>: Traditional dropout in a LSTM network is traditionally applied to the hidden state vector $h_{t-1}$, more specifically the activations (product of the matrix multiplications). These modifications prevent the use of black box LSTM-RNN implementations like <em>cudaNN</em>. Here, the authors propose the use of <a href="https://cs.nyu.edu/~wanli/dropc/dropc.pdf">DropConnect</a>, where dropout is applied to the recurrent hidden to hidden <em>weight matrices</em> (not the activations) which does not require any modifications to the RNN architecture. In fact, the dropout operation is applied once to the weight matrices, before the forward and backward pass. Since the same weights are reused over multiple timesteps, the same dropped weights remain dropped for the entirety of the forward and backward passes.</li>
+<li><strong>NT-ASGD</strong>: For LMs traditional SGD without any momentum tend to work best. In addition to SGD, averaging can be added by a triggering mechanism. When averaging is &ldquo;triggered&rdquo;, instead of returning the last iterate during the SGD update, the algorithm returns an average of the last few iterates. This is called average SGD (ASGD) further improves the training the process. However, the snag here is how/when to trigger the averaging. The authors propose a non-monotonic criterion that conservatively triggers the averaging when the validation metric fails to improve for multiple cycles. They call this non-monotonic ASGD (NT-ASGD).</li>
+<li><strong>Random BPTT</strong>: Randomness makes for better learning as it introduces uncertainty which has to be dealt with by our model. Unfortunately, unlike in vision where can feed in random pictures (as each picture is independent for the most part with others), we can&rsquo;t just mix up words, as they need to be in order to make sense. The authors propose a trick to solve this problem. Instead of having a fixed backpropogation through time (BPTT), they provide a formula which selects the BPTT randomly for the forward and backward pass in two steps. Check out the linked page for the actual formula.</li>
+<li><strong>Variational Dropout</strong>: In standard dropout, a new binary dropout mask is sampled each and every time the dropout function is called. In &ldquo;variational&rdquo; dropout, a binary dropout mask is sampled only <em>once</em> upon the first call and the locked dropout mask is repeatedly used for all repeated connection within the forward and backward pass. Given the dropout mask is fixed, I think the name <em>variational dropout</em> is a misnomer. The authors use variational dropout for all inputs and outputs of the LSTM within a given forward and backward pass.</li>
+<li><strong>Embedding Dropout</strong>: They basically apply dropout to the embedding matrix which consists of word vectors for each word. When dropout is applied to this matrix, it means that all occurrences of specific words disappear. Since this only applied once for a full forward and backward pass, this is equivalent to performing variational dropout on the connection between the one-hot embedding and the embedding lookup.</li>
+<li><strong>Weight Tying</strong>: Same weights are shared between the embedding and the softmax layer which substantially reduces the total parameter count in the model.</li>
+<li><strong>Independent Embedding &amp; Hidden Size</strong>: The authors say that having independent sizes for embeddings and hidden layers helps prevent overfitting. I&rsquo;m not sure I understand how and the entire section that talks about this doesn&rsquo;t make sense to me.</li>
+<li><strong>AR &amp; TAR</strong>: Activation regularization (AR) is $L_2$-regularization which is used on the weights of the network to control the norm of the resulting model and penalizes activations that are significantly larger than 0. Temporal activation regularization (TAR) is $L_2$ decay which is used on individual unit activations and on the difference in outputs of an RNN at different timesteps which penalize the model from producing large changes in the hidden state (also called <em>slowness</em> regularizers).</li>
+</ol>
+
+<p>Their approach is which includes the various tricks mentioned above is called Average stochastic gradient descent Weight-Dropped LSTM or AWD-LSTM.</p>
+
+<h2 id="ulmfit">ULMFit</h2>
+
+<p>Howard and Ruder have used this architecture along with their own bag of tricks and achieved state-of-art results in various NLP tasks. They create a transfer learning method for NLP called Universal Language Model FIne-Tuning (ULMFiT). The goal of inductive transfer learning is that <em>&ldquo;Given a static source task $\tau_s$&rdquo; and any target task $\tau_T$ with $\tau_s \ne \tau_t$, we would like to improve performance on $\tau_T$</em>. Their ULMFiT consists of a series of steps which I summarize below.</p>
+
+<h4 id="general-domain-lm-pretraining">General-domain LM pretraining</h4>
+
+<p>They use Wikitext-103 provided by Stephen Merity <em>et al.</em> to build train their LM which will then be fine-tuned for target tasks. The Wikitext-103 consists of $28,595$ preprocessed Wikipedia articles and $103$ million words. This is the most expensive stage in terms of training time, but this has to be done only once. The resulting LM can then be used for downstream tasks.</p>
+
+<h4 id="target-task-lm-fine-tuning">Target task LM fine-tuning</h4>
+
+<p>The hypothesis here is that given a pre-trained general-domain LM, fine-tuning on a target task (meaning the data in for the target task) will converge faster as it only needs to adapt to the idiosyncrasies of the target data and it allows to train a robust task-specific LM even for small datasets. They also use a bunch of tricks to further enhance the training.</p>
+
+<ol>
+<li><strong>Discriminative fine-tuning</strong>: <em>&ldquo;As different layers capture different types of information, they should be fine-tune to different extents. Instead of using the same learning rate for all layers of the model, discriminative fine-tuning allows us to tune each layer with different learning rates&rdquo;</em>. Empirically, they found that decreasing the learning rate from the last layer by a factor of $2.6$.</li>
+<li><strong>STLR</strong>: <em>&ldquo;For adapting its parameters to task-specific features, we would like the model to quickly converge to a suitable region of the parameter space in the beginning of training and then refine its parameters.&rdquo;</em> For this, instead of using the same learning rate throughout training, they used slanted triangular learning rates (STLR). This increases and decreases the learning rate according based on the stage of training. In particular, they provide a formula for the learning rate scheduler that does this automatically.</li>
+</ol>
+
+<h4 id="target-task-classifier-fine-tuning">Target task classifier fine-tuning</h4>
+
+<p>Once the LM is fine-tuned to the target data, they augment the architecture with two linear blocks for the final classifier fine-tuning. Only the parameters of these classifier layers are learned from scratch. Fine-tuning the target classifier is the most critical part of transfer learning. If overly aggressive fine-tune is used, it will cause <a href="https://en.wikipedia.org/wiki/Catastrophic_interference">catastrophic forgetting</a>. Too cautious fine-tuning will lead to slow convergence. To combat these problems they use the following:</p>
+
+<ol>
+<li><strong>Concat pooling</strong>: Words are the main data source in NLP and as input documents contain lot of words, information may get lost if only the last hidden state of the model is saved. For solving this, they use concat pooling where along with the last hidden state, they keep both the max-pooled and the mean-pooled representation of the hidden states many time steps (subject to GPU memory).</li>
+<li><strong>Gradual unfreezing</strong>: To address the catastrophic forgetting problem, they gradually unfreeze the layers during training instead of fine-tuning all the layers at once. In particular, they gradually unfreeze the model starting from the last layer as this contains the least general knowledge. <em>&ldquo;We first unfreeze the last layer and fine-tune all unfrozen layers for one epoch. We then unfreeze the next lower frozen layer and repeat, until we fine-tune all layers until convergence at the last iteration.&rdquo;</em></li>
+<li><strong>BPT3C</strong>: They use a specific BPTT technique for classification called BPTT for Text Classification (BPT3C) where they divide the document into fixed-length batches of size $b$. At the begininning of each batch, the model is initialized with the fine state of the previous batch while keeping track of all form of hidden states (max and mean pooled). The gradients are then backpropogated to the batches whose hidden states contributed to the final prediction.</li>
+<li><strong>Bidirectional language model</strong>: For increased performance, they train a backward model and take the average of the classifier predictions of both models.</li>
+</ol>
+
+<p>Using all these techniques, they test their model on six datasets, on various different tasks: sentiment analysis, question classification, and topic classification. They use the same AWD-LSTM architecture with 3-layer LSTM of 1150 units each for the LM. The implementation of this LM and classifier is available as part of the FastAI library in the <a href="https://docs.fast.ai/text.html">text</a> application.</p>
+
+<h2 id="implementation">Implementation</h2>
+
+<p>My notebook for this can be found <a href="http://nbviewer.jupyter.org/github/sudarshan85/kaggle-mercari/blob/master/Language-Model.ipynb">here</a>. While I follow the same steps are FastAI&rsquo;s IMDB notebook, there are few differences in the preprocessing:</p>
+
+<ol>
+<li>I have a custom <code>TokenizerProcessor</code> in which I pass <code>mark_fields=True</code>. This is to ensure that my two fields <code>name</code> and <code>item_description</code> are marked as <code>xfld 1</code> and <code>xfld 2</code> respectively in the preprocessed output.</li>
+<li>I have a custom <code>NumericalizeProcessor</code>, where I pass a custom vocabulary size of <code>60,091</code>. No particular reason for this, I just like prime numbers :).</li>
+</ol>
+
+<p>Here is the databunch creation code:</p>
+<div class="highlight"><pre class="chroma">data_lm = (TextList.from_df(texts_df, path, cols=[&#39;name&#39;, &#39;item_description&#39;], processor=[tok_proc, num_proc])
+          .random_split_by_pct(0.1)
+          .label_for_lm()
+          .databunch())</pre></div>
+<p>FastAI&rsquo;s tokenization assigns special tokens for certain words/patterns. These are defined as rules can be found in the documentation <a href="https://docs.fast.ai/text.transform.html#Rules">here</a>.</p>
+
+<p>Once I created my databunch, I created my learner and ran it for one epoch to fit the head. Following this, I unfroze all the layers and ran the model for 11 epochs all using the same learning rates used by FastAI&rsquo;s IMDB notebook. The entire process took about 30 hours to run on a V100 with 16G of RAM. Once I finished the learning process, I saved the entire model along with the encoder (for future use) and did some example inference.</p>
+
+<p><code>learn.predict('Unused computer keyboard!! Brand new', n_words=80)</code></p>
+
+<p><code>Unused computer keyboard!! Brand new xxmaj box has a tear xxmaj it xxmaj could be used as a laptop or tablet i ca n't be using for all new items , but i found that it should be bought online for the new ones pop out again :) about the product ! xxup price xxup is xxup firm ! xxmaj do n't ask for a lower price as it wo n't last ! ! xxmaj thank you . xxmaj dramatically different film on my computer</code></p>
+
+<p>This is pretty cool! It figured out that keyboard has something to with laptop/tablet and it outputed text that has similar context.</p>
+
+<p><code>learn.predict('Cute pair of jeans', n_words=50)</code></p>
+
+<p><code>'Cute pair of jeans , these have xxmaj denim and featuring a xxmaj denim xxmaj shipped xxmaj out xxmaj within 24 xxmaj hours of purchase , xxmaj if you have any xxmaj questions please comment below xxbos xxfld 1 xxmaj curly lace front wig xxfld 2 xxmaj posting is for xxmaj boutique xxmaj style'
+</code></p>
+
+<p>Same thing, it realized <code>denim</code> has something to do with jeans have has output text with that meaning.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this post, I talked about language models and how they are useful for NLP tasks. I went over two prominent papers based on which the FastAI library has built its LM code. I showed how the fine-tuned LM is able to predict text within context. In th next post, I will go over how to use this fine-tuned LM for the target task of predicting the price of an item in the Mercari dataset.</p>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://sudarshan85.github.io/tags/machine-learning/">machine learning</a>&nbsp;
+            
+              <a href="https://sudarshan85.github.io/tags/mercari/">mercari</a>&nbsp;
+            
+              <a href="https://sudarshan85.github.io/tags/language-model/">language model</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <ul class="list-inline footer-links">
+                
+
+
+<li>
+    <a href="//twitter.com/share?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_3%2f&amp;text=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%203%3a%20Language%20Model&amp;via=sudarshan0522"
+       target="_blank" alt="" title="Share on Twitter">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//plus.google.com/share?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_3%2f" target="_blank" title="Share on Google Plus">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-google-plus fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_3%2f" target="_blank" title="Share on Facebook">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//reddit.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_3%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%203%3a%20Language%20Model" target="_blank" title="Share on Reddit">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-reddit fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_3%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%203%3a%20Language%20Model" target="_blank"
+       title="Share on LinkedIn">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_3%2f&amp;title=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%203%3a%20Language%20Model" target="_blank"
+       title="Share on StumbleUpon">
+        <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-stumbleupon fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+
+<li>
+    <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fsudarshan85.github.io%2fpost%2fmercari_3%2f&amp;description=Deep%20Learning%20with%20Structured%20and%20Unstructured%20Data%20with%20FastAI%20-%20Part%203%3a%20Language%20Model" target="_blank"
+       title="Share on Pinterest">
+         <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-pinterest fa-stack-1x fa-inverse"></i>
+              </span>
+    </a>
+</li>
+
+              </ul>
+            </section>
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://sudarshan85.github.io/post/mercari_2/" data-toggle="tooltip" data-placement="top" title="Deep Learning with Structured and Unstructured Data with FastAI - Part 2: Structured Data Model">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+        
+          <div class="disqus-comments">
+            <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "iamshaun" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+          </div>
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:sudarshan85@gmail.com" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/sudarshan85" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/sudarshan0522" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/sudarshan-srinivasan-10aa903a" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            
+            <a href="https://sudarshan85.github.io/index.xml" title="RSS">
+            
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x"></i>
+                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="sudarshan85.github.io">Sudarshan</a>
+            
+          
+
+          &nbsp;&bull;&nbsp;
+          2018
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://sudarshan85.github.io">A Learning Agent&#39;s Journal</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.40.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js" integrity="sha384-/y1Nn9+QQAipbNQWU65krzJralCnuOasHncUFXGkdwntGeSvQicrYkiUBwsgUqc1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/contrib/auto-render.min.js" integrity="sha384-dq1/gEHSxPZQ7DdrM82ID4YVol9BYyU7GbWlIwnwyPzotpoc57wDw/guX8EaYGPx" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://sudarshan85.github.io/js/main.js"></script>
+<script src="https://sudarshan85.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script>
+<script src="https://sudarshan85.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [['$$','$$']],
+    processEscapes: true,
+    processEnvironments: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+    TeX: { equationNumbers: { autoNumber: "AMS" },
+         extensions: ["AMSmath.js", "AMSsymbols.js"] }
+  }
+  });
+  MathJax.Hub.Queue(function() {
+    
+    
+    
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i = 0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+
+  MathJax.Hub.Config({
+  
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+  });
+</script>
+
+
+
+  </body>
+</html>
+
