@@ -158,7 +158,7 @@
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 13 minutes (2705 words)
+  <i class="fa fa-clock-o"></i> 15 minutes (3114 words)
   
   
 </span>
@@ -285,7 +285,29 @@
           .databunch())</pre></div>
 <p>FastAI&rsquo;s tokenization assigns special tokens for certain words/patterns. These are defined as rules can be found in the documentation <a href="https://docs.fast.ai/text.transform.html#Rules">here</a>.</p>
 
-<p>Once I created my databunch, I created my learner and ran it for one epoch to fit the head. Following this, I unfroze all the layers and ran the model for 11 epochs all using the same learning rates used by FastAI&rsquo;s IMDB notebook. The entire process took about 30 hours to run on a V100 with 16G of RAM. Once I finished the learning process, I saved the entire model along with the encoder (for future use) and did some example inference.</p>
+<p>Once I created my databunch, I created my learner and ran it for one epoch to fit the head. Following this, I unfroze all the layers and ran the model for 11 epochs all using the same learning rates used by FastAI&rsquo;s IMDB notebook. The entire process took about 30 hours to run on a V100 with 16G of RAM.</p>
+
+<h3 id="inference">Inference</h3>
+
+<p>Once I finished the learning process, I saved the entire model along with the encoder (for future use) and did some example inference.</p>
+
+<p><code>learn.predict('Unused computer keyboard!! Brand new', n_words=80)</code></p>
+
+<p><code>Unused computer keyboard!! Brand new xxmaj box has a tear xxmaj it xxmaj could be used as a laptop or tablet i ca n't be using for all new items , but i found that it should be bought online for the new ones pop out again :) about the product ! xxup price xxup is xxup firm ! xxmaj do n't ask for a lower price as it wo n't last ! ! xxmaj thank you . xxmaj dramatically different film on my computer</code></p>
+
+<p>This is pretty cool! It figured out that keyboard has something to with laptop/tablet and it outputed text that has similar context.</p>
+
+<p><code>learn.predict('Cute pair of jeans', n_words=50)</code></p>
+
+<p><code>'Cute pair of jeans , these have xxmaj denim and featuring a xxmaj denim xxmaj shipped xxmaj out xxmaj within 24 xxmaj hours of purchase , xxmaj if you have any xxmaj questions please comment below xxbos xxfld 1 xxmaj curly lace front wig xxfld 2 xxmaj posting is for xxmaj boutique xxmaj style'</code></p>
+
+<p>Same thing, it realized <code>denim</code> has something to do with jeans have has output text with that meaning.</p>
+
+<p>An important thing to note is that, we can either do inference in the same session as we&rsquo;ve trained the LM or we can save the model, load it up later and do an inference. I found that to get this to work in a different session, I had to do some extra steps and struggled a bit. Also, I noticed that the output of the language model on a different session was very different from the output in the same session. The ones in the different session were very random without contextual relations. Also, when run on a different sessions, the special tokens such as <code>xxup</code>, <code>xxmaj</code> etc, does not appear. I&rsquo;m not sure why we have that. FastAI&rsquo;s docs provide example for inference learner for LM <a href="https://docs.fast.ai/tutorial.inference.html#Language-modelling">here</a>. While following those instructions mostly work, there is one very important thing to remember.</p>
+
+<p><strong>When we create the databunch, we need to make sure to export the databunch by calling <code>data_lm.export()</code> that saves a file <code>export.pkl</code> in the path. This is the one that has to be used on subsequent steps. Otherwise, the inference procedue will NOT work.</strong></p>
+
+<p>After this,  I just followed the instructions, created an empty data object, created a learner using the empty data object, unfroze it, loaded the trained model, and called the <code>predict</code> function.</p>
 
 <p><code>learn.predict('Unused computer keyboard!! Brand new', n_words=80)</code></p>
 
