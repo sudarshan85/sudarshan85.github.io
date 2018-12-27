@@ -158,7 +158,7 @@
   
   
   &nbsp;|&nbsp;
-  <i class="fa fa-clock-o"></i> 10 minutes (2048 words)
+  <i class="fa fa-clock-o"></i> 10 minutes (2043 words)
   
   
 </span>
@@ -273,12 +273,18 @@
 
 <p>During implementation the binary vector representing a single category would become a binary matrix of input values for the machine learning algorithm (think mini-batch of inputs).</p>
 
-<p>While simple to implement, one-hot encoding has two major disadvantages:
-1. By representing categories by binary vectors, the relationship between these categories is essentially lost. One-hot encoding a category only tells us whether it is present or not and nothing else. Why is that relevant? Because, these relationships are important for our algorithm to learn and one-hot encoding does not allow that learning. Think about the following examples:
-    - <code>Men</code>, <code>Women</code>, and <code>Kids</code>. These categories are associated with people.
-    - <code>Beauty</code> and <code>Women</code>. Women, in general, tend to buy beauty items.
-    - <code>Handmade</code> and <code>Vintage &amp; Collectibles</code>. Handmade items may include crafts which are likely to be sold as collectibles.
-2. By nature, binary matrices are sparse, which take lots of storage and results in unrealistic computational requirements.</p>
+<p>While simple to implement, one-hot encoding has two major disadvantages:</p>
+
+<ol>
+<li>By representing categories by binary vectors, the relationship between these categories is essentially lost. One-hot encoding a category only tells us whether it is present or not and nothing else. Why is that relevant? Because, these relationships are important for our algorithm to learn and one-hot encoding does not allow that learning. Think about the following examples:
+
+<ul>
+<li><code>Men</code>, <code>Women</code>, and <code>Kids</code>. These categories are associated with people.</li>
+<li><code>Beauty</code> and <code>Women</code>. Women, in general, tend to buy beauty items.</li>
+<li><code>Handmade</code> and <code>Vintage &amp; Collectibles</code>. Handmade items may include crafts which are likely to be sold as collectibles.</li>
+</ul></li>
+<li>By nature, binary matrices are sparse, which take lots of storage and results in unrealistic computational requirements.</li>
+</ol>
 
 <p>Clearly, we need better way to convert this strings to numbers. Well, here&rsquo;s a crazy idea. Why not just give each category a bunch of random numbers. More specifically, represent each category with random vector of some size (we get to pick this size). The reason this is useful is because we can make that vector (or a matrix) <em>learnable</em>. In other words, this matrix is just like any other weight matrix in our neural network and can be learned through gradient descent.</p>
 
